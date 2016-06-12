@@ -1,34 +1,35 @@
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using Nuits.HyperV.Switch.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Nuits.HyperV.Switch.ViewModel
 {
     /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// メイン画面ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
         /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
+        /// アプリケーション初期化コマンド
+        /// </summary>
+        public ICommand InitializeCommand { get; private set; }
+
+        /// <summary>
+        /// インスタンスを初期化する
         /// </summary>
         public MainViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            // 初期化ページへ画面遷移する
+            InitializeCommand = new RelayCommand(() =>
+            {
+                MessengerInstance.Send(new NavigationMessage(NavigationDestination.ProcessPage, new InitializeViewModel()));
+            });
         }
     }
 }
