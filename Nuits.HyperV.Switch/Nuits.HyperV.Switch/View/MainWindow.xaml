@@ -10,7 +10,7 @@
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       mc:Ignorable="d"
                       GlowBrush="{DynamicResource AccentColorBrush}"
-                      Title="Hyper-V Switcher" Height="150" Width="300" ResizeMode="NoResize">
+                      Title="Hyper-V Switch" Height="150" Width="300" ResizeMode="NoResize">
     <Controls:MetroWindow.DataContext>
         <vm:MainViewModel/>
     </Controls:MetroWindow.DataContext>
