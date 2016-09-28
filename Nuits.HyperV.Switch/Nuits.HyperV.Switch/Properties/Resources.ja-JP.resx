@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CompletedMessage" xml:space="preserve">
-    <value>We changed the settings.
-You will need to restart Windows.
-Do you want to restart now?</value>
+    <value>設定を変更しました。
+変更を有効にするためにはWindowsを再起動する必要があります。
+今すぐ再起動しますか？</value>
   </data>
   <data name="InitializeMessage" xml:space="preserve">
-    <value>Getting the state of Hyper-V.
-Please wait.</value>
+    <value>Hyper-Vの状態を取得中です。
+しばらくお待ちください。</value>
   </data>
   <data name="NotExistHyperVSettingMessage" xml:space="preserve">
-    <value>I could not get a setting of Hyper-V.
-Quits the application.</value>
+    <value>Hyper-Vの設定が取得できませんでした。
+アプリケーションを終了します。</value>
   </data>
   <data name="UnexpectedErrorMessage" xml:space="preserve">
-    <value>An unexpected error has occurred.
-Quits the application.</value>
+    <value>予期せぬエラーが発生しました。
+システムを終了します。</value>
   </data>
   <data name="UpdatingMessage" xml:space="preserve">
-    <value>To update the configuration.
-Please wait.</value>
+    <value>設定を更新中です。
+しばらくお待ちください。</value>
   </data>
 </root>

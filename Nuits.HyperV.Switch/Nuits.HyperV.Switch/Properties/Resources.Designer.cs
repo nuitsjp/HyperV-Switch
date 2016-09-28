@@ -39,7 +39,7 @@ namespace Nuits.HyperV.Switch.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    var temp = new global::System.Resources.ResourceManager("Nuits.HyperV.Switch.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Nuits.HyperV.Switch.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,9 +61,9 @@ namespace Nuits.HyperV.Switch.Properties {
         }
         
         /// <summary>
-        ///   設定を変更しました。
-        ///変更を有効にするためにはWindowsを再起動する必要があります。
-        ///今すぐ再起動しますか？ に類似しているローカライズされた文字列を検索します。
+        ///   We changed the settings.
+        ///You will need to restart Windows.
+        ///Do you want to restart now? に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string CompletedMessage {
             get {
@@ -72,8 +72,8 @@ namespace Nuits.HyperV.Switch.Properties {
         }
         
         /// <summary>
-        ///   Hyper-Vの状態を取得中です。
-        ///しばらくお待ちください。 に類似しているローカライズされた文字列を検索します。
+        ///   Getting the state of Hyper-V.
+        ///Please wait. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string InitializeMessage {
             get {
@@ -82,8 +82,8 @@ namespace Nuits.HyperV.Switch.Properties {
         }
         
         /// <summary>
-        ///   Hyper-Vの設定が取得できませんでした。
-        ///アプリケーションを終了します。 に類似しているローカライズされた文字列を検索します。
+        ///   I could not get a setting of Hyper-V.
+        ///Quits the application. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string NotExistHyperVSettingMessage {
             get {
@@ -92,7 +92,8 @@ namespace Nuits.HyperV.Switch.Properties {
         }
         
         /// <summary>
-        ///   予期せぬエラーが発生しました。システムを終了します。 に類似しているローカライズされた文字列を検索します。
+        ///   An unexpected error has occurred.
+        ///Quits the application. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string UnexpectedErrorMessage {
             get {
@@ -101,8 +102,8 @@ namespace Nuits.HyperV.Switch.Properties {
         }
         
         /// <summary>
-        ///   設定を更新中です。
-        ///しばらくお待ちください。 に類似しているローカライズされた文字列を検索します。
+        ///   To update the configuration.
+        ///Please wait. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string UpdatingMessage {
             get {
