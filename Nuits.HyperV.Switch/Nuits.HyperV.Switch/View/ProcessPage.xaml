@@ -4,8 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-      xmlns:local="clr-namespace:Nuits.HyperV.Switch.View"
-      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       mc:Ignorable="d" 
       d:DesignHeight="150" d:DesignWidth="300"
       Title="ProcessingPage">
@@ -19,7 +18,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <Controls:ProgressRing Width="40" Height="40"/>
+        <controls:ProgressRing Width="40" Height="40"/>
         <TextBlock Grid.Column="1" Text="{Binding Message.Value}" VerticalAlignment="Center" TextWrapping="Wrap"/>
     </Grid>
 </Page>

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Nuits.HyperV.Switch.Model
@@ -15,32 +12,35 @@ namespace Nuits.HyperV.Switch.Model
         /// <summary>
         /// 
         /// </summary>
-        private static readonly Lazy<WmiService> lazy = new Lazy<WmiService>(() => new WmiService(), true);
+        private static readonly Lazy<WmiService> Lazy = new Lazy<WmiService>(() => new WmiService(), true);
         /// <summary>
         /// https://msdn.microsoft.com/en-us/library/windows/desktop/aa362670(v=vs.85).aspx
         /// </summary>
-        private const uint BcdOSLoaderInteger_HypervisorLaunchType = 0x250000F0;
+        private const uint BcdOsLoaderIntegerHypervisorLaunchType = 0x250000F0;
         /// <summary>
         /// カレントブートローダー
         /// </summary>
-        private BcdObject currentLoaderObject;
+        private readonly BcdObject _currentLoaderObject;
         /// <summary>
         /// 唯一のインスタンスを取得する。
         /// </summary>
-        public static WmiService Instance { get { return lazy.Value; } }
+        public static WmiService Instance => Lazy.Value;
+
         /// <summary>
         /// インスタンスを初期化する
         /// </summary>
         private WmiService()
         {
             //ユーザー特権を有効にするための設定を作成
-            var connectionOptions = new ConnectionOptions();
-            connectionOptions.Impersonation = ImpersonationLevel.Impersonate;
-            connectionOptions.EnablePrivileges = true;
+            var connectionOptions = new ConnectionOptions
+            {
+                Impersonation = ImpersonationLevel.Impersonate,
+                EnablePrivileges = true
+            };
 
             var managementScope = new ManagementScope(@"root\WMI", connectionOptions);
             var managementPath = new ManagementPath("root\\WMI:BcdObject.Id=\"{fa926493-6f1c-4193-a414-58f0b2456d1e}\",StoreFilePath=\"\"");
-            currentLoaderObject = new BcdObject(managementScope, managementPath);
+            _currentLoaderObject = new BcdObject(managementScope, managementPath);
         }
         /// <summary>
         /// HyperVisorLaunchTypeを取得する
@@ -54,7 +54,7 @@ namespace Nuits.HyperV.Switch.Model
                 {
                     // カレントのブートローダーからHypervisorLaunchTypeを取得する
                     ManagementBaseObject element;
-                    if (currentLoaderObject.GetElement(BcdOSLoaderInteger_HypervisorLaunchType, out element))
+                    if (_currentLoaderObject.GetElement(BcdOsLoaderIntegerHypervisorLaunchType, out element))
                     {
                         return (HyperVisorLaunchType)element.Properties["Integer"].Value;
                     }
@@ -82,7 +82,7 @@ namespace Nuits.HyperV.Switch.Model
         {
             return Task.Run(() =>
             {
-                currentLoaderObject.SetIntegerElement((uint)value, BcdOSLoaderInteger_HypervisorLaunchType);
+                _currentLoaderObject.SetIntegerElement((uint)value, BcdOsLoaderIntegerHypervisorLaunchType);
             });
         }
 
@@ -92,9 +92,11 @@ namespace Nuits.HyperV.Switch.Model
         public void RebootSystem()
         {
             //ユーザー特権を有効にするための設定を作成
-            var connectionOptions = new ConnectionOptions();
-            connectionOptions.Impersonation = ImpersonationLevel.Impersonate;
-            connectionOptions.EnablePrivileges = true;
+            var connectionOptions = new ConnectionOptions
+            {
+                Impersonation = ImpersonationLevel.Impersonate,
+                EnablePrivileges = true
+            };
 
             var managementScope = new ManagementScope("\\ROOT\\CIMV2", connectionOptions);
             managementScope.Connect();
@@ -102,15 +104,15 @@ namespace Nuits.HyperV.Switch.Model
             using (var searcher = new ManagementObjectSearcher(managementScope, new ObjectQuery("select * from Win32_OperatingSystem")))
             {
                 //Shutdownメソッドを呼び出す
+                // ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
                 foreach (ManagementObject mo in searcher.Get())
                 {
-                    System.IO.File.AppendAllText("log.txt", string.Format("bar"));
                     //パラメータを指定
                     var inParameters = mo.GetMethodParameters("Win32Shutdown");
                     inParameters["Flags"] = 2;
                     inParameters["Reserved"] = 0;
                     //Win32Shutdownメソッドを呼び出す
-                    var outParameters = mo.InvokeMethod("Win32Shutdown", inParameters, null);
+                    mo.InvokeMethod("Win32Shutdown", inParameters, null);
                 }
             }
         }

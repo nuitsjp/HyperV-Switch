@@ -2,10 +2,6 @@
 using GalaSoft.MvvmLight.Command;
 using Reactive.Bindings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Nuits.HyperV.Switch.ViewModel
@@ -35,9 +31,9 @@ namespace Nuits.HyperV.Switch.ViewModel
         /// <param name="execAction"></param>
         public MessageViewModel(string message, string buttonContent, Action execAction)
         {
-            this.Message.Value = message;
-            this.ButtonContent.Value = buttonContent;
-            this.ExecCommand = new RelayCommand(execAction);
+            Message.Value = message;
+            ButtonContent.Value = buttonContent;
+            ExecCommand = new RelayCommand(execAction);
         }
     }
 }

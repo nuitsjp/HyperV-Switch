@@ -2,10 +2,6 @@
 using GalaSoft.MvvmLight.Command;
 using Nuits.HyperV.Switch.Messaging;
 using Reactive.Bindings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -28,9 +24,9 @@ namespace Nuits.HyperV.Switch.ViewModel
         /// インスタンスを初期化する
         /// </summary>
         /// <param name="message"></param>
-        public ProcessViewModel(string message)
+        protected ProcessViewModel(string message)
         {
-            this.Message.Value = message;
+            Message.Value = message;
             ProcessCommand = new RelayCommand(async () => MessengerInstance.Send(await Process()));
         }
 

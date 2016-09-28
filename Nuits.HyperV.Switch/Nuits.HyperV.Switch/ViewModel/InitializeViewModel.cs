@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using Nuits.HyperV.Switch.Messaging;
-using Reactive.Bindings;
 using Nuits.HyperV.Switch.Model;
 
 namespace Nuits.HyperV.Switch.ViewModel
@@ -36,7 +32,7 @@ namespace Nuits.HyperV.Switch.ViewModel
                     new MessageViewModel(
                         Properties.Resources.NotExistHyperVSettingMessage,
                         "close",
-                        () => App.Current.Shutdown()));
+                        () => Application.Current.Shutdown()));
             }
             else
             {

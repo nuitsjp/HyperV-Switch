@@ -2,11 +2,9 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-      xmlns:local="clr-namespace:Nuits.HyperV.Switch.View"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:converter="clr-namespace:Nuits.HyperV.Switch.View.Converter"
-      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       mc:Ignorable="d" 
       d:DesignHeight="150" d:DesignWidth="300"
       Title="SwitchPage">
@@ -18,7 +16,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Controls:ToggleSwitch Header="Hyper-V state" Height="70" VerticalAlignment="Top" IsChecked="{Binding LaunchType.Value, Converter={StaticResource HyperVisorLaunchTypeConverter}}"/>
+        <controls:ToggleSwitch Header="Hyper-V state" Height="70" VerticalAlignment="Top" IsChecked="{Binding LaunchType.Value, Converter={StaticResource HyperVisorLaunchTypeConverter}}"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
             <Button Content="Ok" Width="75" Style="{StaticResource SquareButtonStyle}" Command="{Binding UpdateCommand}"/>
             <Button Content="Cancel" Width="75" Style="{StaticResource SquareButtonStyle}" Margin="10,0,0,0"/>

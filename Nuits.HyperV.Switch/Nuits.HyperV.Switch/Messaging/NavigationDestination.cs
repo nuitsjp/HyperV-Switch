@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Nuits.HyperV.Switch.Messaging
+﻿namespace Nuits.HyperV.Switch.Messaging
 {
     /// <summary>
     /// 画面の遷移先を表す

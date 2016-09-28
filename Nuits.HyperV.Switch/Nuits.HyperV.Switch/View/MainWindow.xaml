@@ -1,19 +1,18 @@
-﻿<Controls:MetroWindow x:Name="MyInstance" x:Class="Nuits.HyperV.Switch.View.MainWindow"
+﻿<controls:MetroWindow x:Name="MyInstance" x:Class="Nuits.HyperV.Switch.View.MainWindow"
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-                      xmlns:local="clr-namespace:Nuits.HyperV.Switch.View"
                       xmlns:behavior="clr-namespace:Nuits.HyperV.Switch.View.Behavior"
                       xmlns:vm="clr-namespace:Nuits.HyperV.Switch.ViewModel"
-                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       mc:Ignorable="d"
                       GlowBrush="{DynamicResource AccentColorBrush}"
                       Title="Hyper-V Switch" Height="150" Width="300" ResizeMode="NoResize">
-    <Controls:MetroWindow.DataContext>
+    <controls:MetroWindow.DataContext>
         <vm:MainViewModel/>
-    </Controls:MetroWindow.DataContext>
+    </controls:MetroWindow.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding InitializeCommand}"/>
@@ -24,4 +23,5 @@
             <behavior:NavigationPageBehavior/>
         </i:Interaction.Behaviors>
     </Frame>
-</Controls:MetroWindow>
+</controls:MetroWindow>
+

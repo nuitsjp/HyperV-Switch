@@ -1,9 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nuits.HyperV.Switch.Messaging
 {
@@ -25,10 +20,10 @@ namespace Nuits.HyperV.Switch.Messaging
         /// </summary>
         /// <param name="destination"></param>
         /// <param name="viewModel"></param>
-        public NavigationMessage(NavigationDestination destination, object viewModel) : base()
+        public NavigationMessage(NavigationDestination destination, object viewModel)
         {
-            this.Destination = destination;
-            this.ViewModel = viewModel;
+            Destination = destination;
+            ViewModel = viewModel;
         }
     }
 }

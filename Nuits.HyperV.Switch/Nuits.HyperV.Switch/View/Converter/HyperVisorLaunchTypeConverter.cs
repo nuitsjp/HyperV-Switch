@@ -1,10 +1,6 @@
 ﻿using Nuits.HyperV.Switch.Model;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace Nuits.HyperV.Switch.View.Converter
@@ -21,7 +17,7 @@ namespace Nuits.HyperV.Switch.View.Converter
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((HyperVisorLaunchType)value == HyperVisorLaunchType.Auto) ? true : false;
+            return (HyperVisorLaunchType)value == HyperVisorLaunchType.Auto;
         }
         /// <summary>
         /// Viewで利用する型からViewModelで利用する型へ変換する
@@ -33,7 +29,7 @@ namespace Nuits.HyperV.Switch.View.Converter
         /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((bool)value) ? HyperVisorLaunchType.Auto : HyperVisorLaunchType.Off;
+            return (bool)value ? HyperVisorLaunchType.Auto : HyperVisorLaunchType.Off;
         }
     }
 }

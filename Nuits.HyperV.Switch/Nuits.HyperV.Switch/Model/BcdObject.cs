@@ -12,110 +12,100 @@
     // 関数 Reset<PropertyName> は Null 許容を使用できる読み込み/書き込みプロパティに追加されます。これらの関数は、プロパティを NULL に設定するためにプロパティ ブラウザの VS デザイナによって使用されます。
     // プロパティ用にクラスに追加されたすべてのプロパティは、Visual Studio デザイナ内での動作を定義するように、また使用する TypeConverter を定義するように設定されています。
     // WMI クラス用に生成された事前バインディング クラスです。BcdObject
-    public class BcdObject : System.ComponentModel.Component {
+    public class BcdObject : Component {
         
         // クラスが存在する場所にWMI 名前空間を保持するプライベート プロパティです。
-        private static string CreatedWmiNamespace = "root\\WMI";
+        private static readonly string CreatedWmiNamespace = "root\\WMI";
         
         // このクラスを作成した WMI クラスの名前を保持するプライベート プロパティです。
-        private static string CreatedClassName = "BcdObject";
+        private static readonly string CreatedClassName = "BcdObject";
         
         // さまざまなメソッドで使用される ManagementScope を保持するプライベート メンバ変数です。
-        private static System.Management.ManagementScope statMgmtScope = null;
+        private static ManagementScope _statMgmtScope;
         
-        private ManagementSystemProperties PrivateSystemProperties;
+        private ManagementSystemProperties _privateSystemProperties;
         
         // 基になる LateBound WMI オブジェクトです。
-        private System.Management.ManagementObject PrivateLateBoundObject;
+        private ManagementObject _privateLateBoundObject;
         
         // クラスの '自動コミット' 動作を保存するメンバ変数です。
-        private bool AutoCommitProp;
-        
-        // インスタンスを表す埋め込みプロパティを保持するプライベート変数です。
-        private System.Management.ManagementBaseObject embeddedObj;
+        private bool _autoCommitProp;
         
         // 現在使用されている WMI オブジェクトです。
-        private System.Management.ManagementBaseObject curObj;
+        private ManagementBaseObject _curObj;
         
         // インスタンスが埋め込みオブジェクトかどうかを示すフラグです。
-        private bool isEmbedded;
+        private bool _isEmbedded;
         
         // 下記は WMI オブジェクトを使用してクラスのインスタンスを初期化するコンストラクタのオーバーロードです。
         public BcdObject() {
-            this.InitializeObject(null, null, null);
+            InitializeObject(null, null, null);
         }
         
         public BcdObject(string keyId, string keyStoreFilePath) {
-            this.InitializeObject(null, new System.Management.ManagementPath(BcdObject.ConstructPath(keyId, keyStoreFilePath)), null);
+            InitializeObject(null, new ManagementPath(ConstructPath(keyId, keyStoreFilePath)), null);
         }
         
-        public BcdObject(System.Management.ManagementScope mgmtScope, string keyId, string keyStoreFilePath) {
-            this.InitializeObject(((System.Management.ManagementScope)(mgmtScope)), new System.Management.ManagementPath(BcdObject.ConstructPath(keyId, keyStoreFilePath)), null);
+        public BcdObject(ManagementScope mgmtScope, string keyId, string keyStoreFilePath) {
+            InitializeObject(mgmtScope, new ManagementPath(ConstructPath(keyId, keyStoreFilePath)), null);
         }
         
-        public BcdObject(System.Management.ManagementPath path, System.Management.ObjectGetOptions getOptions) {
-            this.InitializeObject(null, path, getOptions);
+        public BcdObject(ManagementPath path, ObjectGetOptions getOptions) {
+            InitializeObject(null, path, getOptions);
         }
         
-        public BcdObject(System.Management.ManagementScope mgmtScope, System.Management.ManagementPath path) {
-            this.InitializeObject(mgmtScope, path, null);
+        public BcdObject(ManagementScope mgmtScope, ManagementPath path) {
+            InitializeObject(mgmtScope, path, null);
         }
         
-        public BcdObject(System.Management.ManagementPath path) {
-            this.InitializeObject(null, path, null);
+        public BcdObject(ManagementPath path) {
+            InitializeObject(null, path, null);
         }
         
-        public BcdObject(System.Management.ManagementScope mgmtScope, System.Management.ManagementPath path, System.Management.ObjectGetOptions getOptions) {
-            this.InitializeObject(mgmtScope, path, getOptions);
+        public BcdObject(ManagementScope mgmtScope, ManagementPath path, ObjectGetOptions getOptions) {
+            InitializeObject(mgmtScope, path, getOptions);
         }
         
-        public BcdObject(System.Management.ManagementObject theObject) {
+        public BcdObject(ManagementObject theObject) {
             Initialize();
-            if ((CheckIfProperClass(theObject) == true)) {
-                PrivateLateBoundObject = theObject;
-                PrivateSystemProperties = new ManagementSystemProperties(PrivateLateBoundObject);
-                curObj = PrivateLateBoundObject;
+            if (CheckIfProperClass(theObject)) {
+                _privateLateBoundObject = theObject;
+                _privateSystemProperties = new ManagementSystemProperties(_privateLateBoundObject);
+                _curObj = _privateLateBoundObject;
             }
             else {
-                throw new System.ArgumentException("クラス名が一致しません。");
+                throw new ArgumentException("クラス名が一致しません。");
             }
         }
         
-        public BcdObject(System.Management.ManagementBaseObject theObject) {
+        public BcdObject(ManagementBaseObject theObject) {
             Initialize();
-            if ((CheckIfProperClass(theObject) == true)) {
-                embeddedObj = theObject;
-                PrivateSystemProperties = new ManagementSystemProperties(theObject);
-                curObj = embeddedObj;
-                isEmbedded = true;
+            if (CheckIfProperClass(theObject)) {
+                _privateSystemProperties = new ManagementSystemProperties(theObject);
+                _curObj = theObject;
+                _isEmbedded = true;
             }
             else {
-                throw new System.ArgumentException("クラス名が一致しません。");
+                throw new ArgumentException("クラス名が一致しません。");
             }
         }
         
         // WMI クラスの名前空間を返すプロパティです。
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public string OriginatingNamespace {
-            get {
-                return "root\\WMI";
-            }
-        }
-        
+        public string OriginatingNamespace => "root\\WMI";
+
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string ManagementClassName {
             get {
-                string strRet = CreatedClassName;
-                if ((curObj != null)) {
-                    if ((curObj.ClassPath != null)) {
-                        strRet = ((string)(curObj["__CLASS"]));
-                        if (((strRet == null) 
-                                    || (strRet == string.Empty))) {
-                            strRet = CreatedClassName;
-                        }
-                    }
+                var strRet = CreatedClassName;
+                if (_curObj?.ClassPath != null) {
+                    strRet = (string)_curObj["__CLASS"];
+                    if ((strRet == null) 
+                        || (strRet == string.Empty)) {
+                             strRet = CreatedClassName;
+                         }
                 }
                 return strRet;
             }
@@ -124,36 +114,28 @@
         // WMI オブジェクトのシステム プロパティを取得するための埋め込みオブジェクトをポイントするプロパティです。
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ManagementSystemProperties SystemProperties {
-            get {
-                return PrivateSystemProperties;
-            }
-        }
-        
+        public ManagementSystemProperties SystemProperties => _privateSystemProperties;
+
         // 基になる LateBound WMI オブジェクトを返すプロパティです。
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public System.Management.ManagementBaseObject LateBoundObject {
-            get {
-                return curObj;
-            }
-        }
-        
+        public ManagementBaseObject LateBoundObject => _curObj;
+
         // オブジェクトの ManagementScope です。
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public System.Management.ManagementScope Scope {
+        public ManagementScope Scope {
             get {
-                if ((isEmbedded == false)) {
-                    return PrivateLateBoundObject.Scope;
+                if (_isEmbedded == false) {
+                    return _privateLateBoundObject.Scope;
                 }
                 else {
                     return null;
                 }
             }
             set {
-                if ((isEmbedded == false)) {
-                    PrivateLateBoundObject.Scope = value;
+                if (_isEmbedded == false) {
+                    _privateLateBoundObject.Scope = value;
                 }
             }
         }
@@ -163,30 +145,30 @@
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool AutoCommit {
             get {
-                return AutoCommitProp;
+                return _autoCommitProp;
             }
             set {
-                AutoCommitProp = value;
+                _autoCommitProp = value;
             }
         }
         
         // 基になる WMI オブジェクトの ManagementPath です。
         [Browsable(true)]
-        public System.Management.ManagementPath Path {
+        public ManagementPath Path {
             get {
-                if ((isEmbedded == false)) {
-                    return PrivateLateBoundObject.Path;
+                if (_isEmbedded == false) {
+                    return _privateLateBoundObject.Path;
                 }
                 else {
                     return null;
                 }
             }
             set {
-                if ((isEmbedded == false)) {
-                    if ((CheckIfProperClass(null, value, null) != true)) {
-                        throw new System.ArgumentException("クラス名が一致しません。");
+                if (_isEmbedded == false) {
+                    if (CheckIfProperClass(null, value, null) != true) {
+                        throw new ArgumentException("クラス名が一致しません。");
                     }
-                    PrivateLateBoundObject.Path = value;
+                    _privateLateBoundObject.Path = value;
                 }
             }
         }
@@ -194,38 +176,30 @@
         // さまざまなメソッドで使用されるプライベート スタティック スコープ プロパティです。
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public static System.Management.ManagementScope StaticScope {
+        public static ManagementScope StaticScope {
             get {
-                return statMgmtScope;
+                return _statMgmtScope;
             }
             set {
-                statMgmtScope = value;
+                _statMgmtScope = value;
             }
         }
         
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Description("This is the guid id of this object, unique to this store.")]
-        public string Id {
-            get {
-                return ((string)(curObj["Id"]));
-            }
-        }
-        
+        public string Id => (string)_curObj["Id"];
+
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Description("This is the file path of the store that this object belongs to.")]
-        public string StoreFilePath {
-            get {
-                return ((string)(curObj["StoreFilePath"]));
-            }
-        }
-        
+        public string StoreFilePath => (string)_curObj["StoreFilePath"];
+
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsTypeNull {
             get {
-                if ((curObj["Type"] == null)) {
+                if (_curObj["Type"] == null) {
                     return true;
                 }
                 else {
@@ -238,37 +212,37 @@
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Description("The upper 4 bits (28-31) represent the object type. The meaning of the lower 28 b" +
             "its (0-27) is dependent on the object type.")]
-        [TypeConverter(typeof(WMIValueTypeConverter))]
+        [TypeConverter(typeof(WmiValueTypeConverter))]
         public uint Type {
             get {
-                if ((curObj["Type"] == null)) {
-                    return System.Convert.ToUInt32(0);
+                if (_curObj["Type"] == null) {
+                    return Convert.ToUInt32(0);
                 }
-                return ((uint)(curObj["Type"]));
+                return (uint)_curObj["Type"];
             }
         }
         
-        private bool CheckIfProperClass(System.Management.ManagementScope mgmtScope, System.Management.ManagementPath path, System.Management.ObjectGetOptions OptionsParam) {
-            if (((path != null) 
-                        && (string.Compare(path.ClassName, this.ManagementClassName, true, System.Globalization.CultureInfo.InvariantCulture) == 0))) {
+        private bool CheckIfProperClass(ManagementScope mgmtScope, ManagementPath path, ObjectGetOptions optionsParam) {
+            if ((path != null) 
+                && (string.Compare(path.ClassName, ManagementClassName, true, CultureInfo.InvariantCulture) == 0)) {
                 return true;
             }
             else {
-                return CheckIfProperClass(new System.Management.ManagementObject(mgmtScope, path, OptionsParam));
+                return CheckIfProperClass(new ManagementObject(mgmtScope, path, optionsParam));
             }
         }
         
-        private bool CheckIfProperClass(System.Management.ManagementBaseObject theObj) {
-            if (((theObj != null) 
-                        && (string.Compare(((string)(theObj["__CLASS"])), this.ManagementClassName, true, System.Globalization.CultureInfo.InvariantCulture) == 0))) {
+        private bool CheckIfProperClass(ManagementBaseObject theObj) {
+            if ((theObj != null) 
+                && (string.Compare((string)theObj["__CLASS"], ManagementClassName, true, CultureInfo.InvariantCulture) == 0)) {
                 return true;
             }
             else {
-                System.Array parentClasses = ((System.Array)(theObj["__DERIVATION"]));
-                if ((parentClasses != null)) {
-                    int count = 0;
-                    for (count = 0; (count < parentClasses.Length); count = (count + 1)) {
-                        if ((string.Compare(((string)(parentClasses.GetValue(count))), this.ManagementClassName, true, System.Globalization.CultureInfo.InvariantCulture) == 0)) {
+                // ReSharper disable once PossibleNullReferenceException
+                var parentClasses = (Array)theObj["__DERIVATION"];
+                if (parentClasses != null) {
+                    for (var count = 0; count < parentClasses.Length; count = count + 1) {
+                        if (string.Compare((string)parentClasses.GetValue(count), ManagementClassName, true, CultureInfo.InvariantCulture) == 0) {
                             return true;
                         }
                     }
@@ -278,7 +252,7 @@
         }
         
         private bool ShouldSerializeType() {
-            if ((this.IsTypeNull == false)) {
+            if (IsTypeNull == false) {
                 return true;
             }
             return false;
@@ -286,40 +260,40 @@
         
         [Browsable(true)]
         public void CommitObject() {
-            if ((isEmbedded == false)) {
-                PrivateLateBoundObject.Put();
+            if (_isEmbedded == false) {
+                _privateLateBoundObject.Put();
             }
         }
         
         [Browsable(true)]
-        public void CommitObject(System.Management.PutOptions putOptions) {
-            if ((isEmbedded == false)) {
-                PrivateLateBoundObject.Put(putOptions);
+        public void CommitObject(PutOptions putOptions) {
+            if (_isEmbedded == false) {
+                _privateLateBoundObject.Put(putOptions);
             }
         }
         
         private void Initialize() {
-            AutoCommitProp = true;
-            isEmbedded = false;
+            _autoCommitProp = true;
+            _isEmbedded = false;
         }
         
         private static string ConstructPath(string keyId, string keyStoreFilePath) {
-            string strPath = "root\\WMI:BcdObject";
+            var strPath = "root\\WMI:BcdObject";
             strPath = string.Concat(strPath, string.Concat(".Id=", string.Concat("\"", string.Concat(keyId, "\""))));
             strPath = string.Concat(strPath, string.Concat(",StoreFilePath=", string.Concat("\"", string.Concat(keyStoreFilePath, "\""))));
             return strPath;
         }
         
-        private void InitializeObject(System.Management.ManagementScope mgmtScope, System.Management.ManagementPath path, System.Management.ObjectGetOptions getOptions) {
+        private void InitializeObject(ManagementScope mgmtScope, ManagementPath path, ObjectGetOptions getOptions) {
             Initialize();
-            if ((path != null)) {
-                if ((CheckIfProperClass(mgmtScope, path, getOptions) != true)) {
-                    throw new System.ArgumentException("クラス名が一致しません。");
+            if (path != null) {
+                if (CheckIfProperClass(mgmtScope, path, getOptions) != true) {
+                    throw new ArgumentException("クラス名が一致しません。");
                 }
             }
-            PrivateLateBoundObject = new System.Management.ManagementObject(mgmtScope, path, getOptions);
-            PrivateSystemProperties = new ManagementSystemProperties(PrivateLateBoundObject);
-            curObj = PrivateLateBoundObject;
+            _privateLateBoundObject = new ManagementObject(mgmtScope, path, getOptions);
+            _privateSystemProperties = new ManagementSystemProperties(_privateLateBoundObject);
+            _curObj = _privateLateBoundObject;
         }
         
         // WMI クラスのインスタンスを列挙する GetInstances() ヘルプのオーバーロードです。
@@ -339,550 +313,473 @@
             return GetInstances(null, condition, selectedProperties);
         }
         
-        public static BcdObjectCollection GetInstances(System.Management.ManagementScope mgmtScope, System.Management.EnumerationOptions enumOptions) {
-            if ((mgmtScope == null)) {
-                if ((statMgmtScope == null)) {
-                    mgmtScope = new System.Management.ManagementScope();
-                    mgmtScope.Path.NamespacePath = "root\\WMI";
-                }
-                else {
-                    mgmtScope = statMgmtScope;
-                }
+        public static BcdObjectCollection GetInstances(ManagementScope mgmtScope, EnumerationOptions enumOptions) {
+            if (mgmtScope == null) {
+                mgmtScope = _statMgmtScope ?? new ManagementScope {Path = {NamespacePath = "root\\WMI"}};
             }
-            System.Management.ManagementPath pathObj = new System.Management.ManagementPath();
-            pathObj.ClassName = "BcdObject";
-            pathObj.NamespacePath = "root\\WMI";
-            System.Management.ManagementClass clsObject = new System.Management.ManagementClass(mgmtScope, pathObj, null);
-            if ((enumOptions == null)) {
-                enumOptions = new System.Management.EnumerationOptions();
-                enumOptions.EnsureLocatable = true;
+            var pathObj = new ManagementPath
+            {
+                ClassName = "BcdObject",
+                NamespacePath = "root\\WMI"
+            };
+            var clsObject = new ManagementClass(mgmtScope, pathObj, null);
+            if (enumOptions == null) {
+                enumOptions = new EnumerationOptions {EnsureLocatable = true};
             }
             return new BcdObjectCollection(clsObject.GetInstances(enumOptions));
         }
         
-        public static BcdObjectCollection GetInstances(System.Management.ManagementScope mgmtScope, string condition) {
+        public static BcdObjectCollection GetInstances(ManagementScope mgmtScope, string condition) {
             return GetInstances(mgmtScope, condition, null);
         }
         
-        public static BcdObjectCollection GetInstances(System.Management.ManagementScope mgmtScope, string[] selectedProperties) {
+        public static BcdObjectCollection GetInstances(ManagementScope mgmtScope, string[] selectedProperties) {
             return GetInstances(mgmtScope, null, selectedProperties);
         }
         
-        public static BcdObjectCollection GetInstances(System.Management.ManagementScope mgmtScope, string condition, string[] selectedProperties) {
-            if ((mgmtScope == null)) {
-                if ((statMgmtScope == null)) {
-                    mgmtScope = new System.Management.ManagementScope();
-                    mgmtScope.Path.NamespacePath = "root\\WMI";
-                }
-                else {
-                    mgmtScope = statMgmtScope;
-                }
+        public static BcdObjectCollection GetInstances(ManagementScope mgmtScope, string condition, string[] selectedProperties) {
+            if (mgmtScope == null) {
+                mgmtScope = _statMgmtScope ?? new ManagementScope {Path = {NamespacePath = "root\\WMI"}};
             }
-            System.Management.ManagementObjectSearcher ObjectSearcher = new System.Management.ManagementObjectSearcher(mgmtScope, new SelectQuery("BcdObject", condition, selectedProperties));
-            System.Management.EnumerationOptions enumOptions = new System.Management.EnumerationOptions();
-            enumOptions.EnsureLocatable = true;
-            ObjectSearcher.Options = enumOptions;
-            return new BcdObjectCollection(ObjectSearcher.Get());
+            var objectSearcher = new ManagementObjectSearcher(mgmtScope, new SelectQuery("BcdObject", condition, selectedProperties));
+            var enumOptions = new EnumerationOptions {EnsureLocatable = true};
+            objectSearcher.Options = enumOptions;
+            return new BcdObjectCollection(objectSearcher.Get());
         }
         
         [Browsable(true)]
         public static BcdObject CreateInstance() {
-            System.Management.ManagementScope mgmtScope = null;
-            if ((statMgmtScope == null)) {
-                mgmtScope = new System.Management.ManagementScope();
-                mgmtScope.Path.NamespacePath = CreatedWmiNamespace;
-            }
-            else {
-                mgmtScope = statMgmtScope;
-            }
-            System.Management.ManagementPath mgmtPath = new System.Management.ManagementPath(CreatedClassName);
-            System.Management.ManagementClass tmpMgmtClass = new System.Management.ManagementClass(mgmtScope, mgmtPath, null);
+            var mgmtScope = _statMgmtScope ?? new ManagementScope {Path = {NamespacePath = CreatedWmiNamespace}};
+            var mgmtPath = new ManagementPath(CreatedClassName);
+            var tmpMgmtClass = new ManagementClass(mgmtScope, mgmtPath, null);
             return new BcdObject(tmpMgmtClass.CreateInstance());
         }
         
         [Browsable(true)]
         public void Delete() {
-            PrivateLateBoundObject.Delete();
+            _privateLateBoundObject.Delete();
         }
         
-        public bool DeleteElement(uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("DeleteElement");
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("DeleteElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool DeleteElement(uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("DeleteElement");
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("DeleteElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
-            }
-        }
-        
-        public bool EnumerateElements(out System.Management.ManagementBaseObject[] Elements) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("EnumerateElements", inParams, null);
-                Elements = ((System.Management.ManagementBaseObject[])(outParams.Properties["Elements"].Value));
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
-            }
-            else {
-                Elements = null;
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool EnumerateElementTypes(out uint[] Types) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("EnumerateElementTypes", inParams, null);
-                Types = ((uint[])(outParams.Properties["Types"].Value));
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool EnumerateElements(out ManagementBaseObject[] elements) {
+            if (_isEmbedded == false) {
+                var outParams = _privateLateBoundObject.InvokeMethod("EnumerateElements", null, null);
+                // ReSharper disable once PossibleNullReferenceException
+                elements = (ManagementBaseObject[])outParams.Properties["Elements"].Value;
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                Types = null;
-                return System.Convert.ToBoolean(0);
+                elements = null;
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool GetElement(uint Type, out System.Management.ManagementBaseObject Element) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("GetElement");
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("GetElement", inParams, null);
-                Element = ((System.Management.ManagementBaseObject)(outParams.Properties["Element"].Value));
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool EnumerateElementTypes(out uint[] types) {
+            if (_isEmbedded == false) {
+                var outParams = _privateLateBoundObject.InvokeMethod("EnumerateElementTypes", null, null);
+                // ReSharper disable once PossibleNullReferenceException
+                types = (uint[])outParams.Properties["Types"].Value;
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                Element = null;
-                return System.Convert.ToBoolean(0);
+                types = null;
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool GetElementWithFlags(uint Flags, uint Type, out System.Management.ManagementBaseObject Element) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("GetElementWithFlags");
-                inParams["Flags"] = ((uint)(Flags));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("GetElementWithFlags", inParams, null);
-                Element = ((System.Management.ManagementBaseObject)(outParams.Properties["Element"].Value));
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool GetElement(uint type, out ManagementBaseObject element) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("GetElement");
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("GetElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                element = (ManagementBaseObject)outParams.Properties["Element"].Value;
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                Element = null;
-                return System.Convert.ToBoolean(0);
+                element = null;
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetBooleanElement(bool Boolean, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetBooleanElement");
-                inParams["Boolean"] = ((bool)(Boolean));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetBooleanElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool GetElementWithFlags(uint flags, uint type, out ManagementBaseObject element) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("GetElementWithFlags");
+                inParams["Flags"] = flags;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("GetElementWithFlags", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                element = (ManagementBaseObject)outParams.Properties["Element"].Value;
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                element = null;
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetDeviceElement(string AdditionalOptions, uint DeviceType, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetDeviceElement");
-                inParams["AdditionalOptions"] = ((string)(AdditionalOptions));
-                inParams["DeviceType"] = ((uint)(DeviceType));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetDeviceElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetBooleanElement(bool boolean, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetBooleanElement");
+                inParams["Boolean"] = boolean;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetBooleanElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetFileDeviceElement(string AdditionalOptions, uint DeviceType, string ParentAdditionalOptions, uint ParentDeviceType, string ParentPath, string Path, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetFileDeviceElement");
-                inParams["AdditionalOptions"] = ((string)(AdditionalOptions));
-                inParams["DeviceType"] = ((uint)(DeviceType));
-                inParams["ParentAdditionalOptions"] = ((string)(ParentAdditionalOptions));
-                inParams["ParentDeviceType"] = ((uint)(ParentDeviceType));
-                inParams["ParentPath"] = ((string)(ParentPath));
-                inParams["Path"] = ((string)(Path));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetFileDeviceElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetDeviceElement(string additionalOptions, uint deviceType, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetDeviceElement");
+                inParams["AdditionalOptions"] = additionalOptions;
+                inParams["DeviceType"] = deviceType;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetDeviceElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetIntegerElement(ulong Integer, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetIntegerElement");
-                inParams["Integer"] = ((ulong)(Integer));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetIntegerElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetFileDeviceElement(string additionalOptions, uint deviceType, string parentAdditionalOptions, uint parentDeviceType, string parentPath, string path, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetFileDeviceElement");
+                inParams["AdditionalOptions"] = additionalOptions;
+                inParams["DeviceType"] = deviceType;
+                inParams["ParentAdditionalOptions"] = parentAdditionalOptions;
+                inParams["ParentDeviceType"] = parentDeviceType;
+                inParams["ParentPath"] = parentPath;
+                inParams["Path"] = path;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetFileDeviceElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetIntegerListElement(ulong[] Integers, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetIntegerListElement");
-                inParams["Integers"] = ((ulong[])(Integers));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetIntegerListElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetIntegerElement(ulong integer, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetIntegerElement");
+                inParams["Integer"] = integer;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetIntegerElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetObjectElement(string Id, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetObjectElement");
-                inParams["Id"] = ((string)(Id));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetObjectElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetIntegerListElement(ulong[] integers, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetIntegerListElement");
+                inParams["Integers"] = integers;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetIntegerListElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetObjectListElement(string[] Ids, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetObjectListElement");
-                inParams["Ids"] = ((string[])(Ids));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetObjectListElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetObjectElement(string id, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetObjectElement");
+                inParams["Id"] = id;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetObjectElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetPartitionDeviceElement(string AdditionalOptions, uint DeviceType, string Path, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetPartitionDeviceElement");
-                inParams["AdditionalOptions"] = ((string)(AdditionalOptions));
-                inParams["DeviceType"] = ((uint)(DeviceType));
-                inParams["Path"] = ((string)(Path));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetPartitionDeviceElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetObjectListElement(string[] ids, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetObjectListElement");
+                inParams["Ids"] = ids;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetObjectListElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetPartitionDeviceElementWithFlags(string AdditionalOptions, uint DeviceType, uint Flags, string Path, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetPartitionDeviceElementWithFlags");
-                inParams["AdditionalOptions"] = ((string)(AdditionalOptions));
-                inParams["DeviceType"] = ((uint)(DeviceType));
-                inParams["Flags"] = ((uint)(Flags));
-                inParams["Path"] = ((string)(Path));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetPartitionDeviceElementWithFlags", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetPartitionDeviceElement(string additionalOptions, uint deviceType, string path, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetPartitionDeviceElement");
+                inParams["AdditionalOptions"] = additionalOptions;
+                inParams["DeviceType"] = deviceType;
+                inParams["Path"] = path;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetPartitionDeviceElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetQualifiedPartitionDeviceElement(string DiskSignature, string PartitionIdentifier, uint PartitionStyle, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetQualifiedPartitionDeviceElement");
-                inParams["DiskSignature"] = ((string)(DiskSignature));
-                inParams["PartitionIdentifier"] = ((string)(PartitionIdentifier));
-                inParams["PartitionStyle"] = ((uint)(PartitionStyle));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetQualifiedPartitionDeviceElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetPartitionDeviceElementWithFlags(string additionalOptions, uint deviceType, uint flags, string path, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetPartitionDeviceElementWithFlags");
+                inParams["AdditionalOptions"] = additionalOptions;
+                inParams["DeviceType"] = deviceType;
+                inParams["Flags"] = flags;
+                inParams["Path"] = path;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetPartitionDeviceElementWithFlags", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetStringElement(string String, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetStringElement");
-                inParams["String"] = ((string)(String));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetStringElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetQualifiedPartitionDeviceElement(string diskSignature, string partitionIdentifier, uint partitionStyle, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetQualifiedPartitionDeviceElement");
+                inParams["DiskSignature"] = diskSignature;
+                inParams["PartitionIdentifier"] = partitionIdentifier;
+                inParams["PartitionStyle"] = partitionStyle;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetQualifiedPartitionDeviceElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
             }
         }
         
-        public bool SetVhdDeviceElement(uint CustomLocate, string ParentAdditionalOptions, uint ParentDeviceType, string ParentPath, string Path, uint Type) {
-            if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                inParams = PrivateLateBoundObject.GetMethodParameters("SetVhdDeviceElement");
-                inParams["CustomLocate"] = ((uint)(CustomLocate));
-                inParams["ParentAdditionalOptions"] = ((string)(ParentAdditionalOptions));
-                inParams["ParentDeviceType"] = ((uint)(ParentDeviceType));
-                inParams["ParentPath"] = ((string)(ParentPath));
-                inParams["Path"] = ((string)(Path));
-                inParams["Type"] = ((uint)(Type));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetVhdDeviceElement", inParams, null);
-                return System.Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+        public bool SetStringElement(string String, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetStringElement");
+                inParams["String"] = String;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetStringElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
             }
             else {
-                return System.Convert.ToBoolean(0);
+                return Convert.ToBoolean(0);
+            }
+        }
+        
+        public bool SetVhdDeviceElement(uint customLocate, string parentAdditionalOptions, uint parentDeviceType, string parentPath, string path, uint type) {
+            if (_isEmbedded == false) {
+                var inParams = _privateLateBoundObject.GetMethodParameters("SetVhdDeviceElement");
+                inParams["CustomLocate"] = customLocate;
+                inParams["ParentAdditionalOptions"] = parentAdditionalOptions;
+                inParams["ParentDeviceType"] = parentDeviceType;
+                inParams["ParentPath"] = parentPath;
+                inParams["Path"] = path;
+                inParams["Type"] = type;
+                var outParams = _privateLateBoundObject.InvokeMethod("SetVhdDeviceElement", inParams, null);
+                // ReSharper disable once PossibleNullReferenceException
+                return Convert.ToBoolean(outParams.Properties["ReturnValue"].Value);
+            }
+            else {
+                return Convert.ToBoolean(0);
             }
         }
         
         // クラスのインスタンスを列挙する列挙子の実装です。
         public class BcdObjectCollection : object, ICollection {
             
-            private ManagementObjectCollection privColObj;
+            private readonly ManagementObjectCollection _privColObj;
             
             public BcdObjectCollection(ManagementObjectCollection objCollection) {
-                privColObj = objCollection;
+                _privColObj = objCollection;
             }
             
-            public virtual int Count {
-                get {
-                    return privColObj.Count;
-                }
-            }
-            
-            public virtual bool IsSynchronized {
-                get {
-                    return privColObj.IsSynchronized;
-                }
-            }
-            
-            public virtual object SyncRoot {
-                get {
-                    return this;
-                }
-            }
-            
-            public virtual void CopyTo(System.Array array, int index) {
-                privColObj.CopyTo(array, index);
+            public virtual int Count => _privColObj.Count;
+
+            public virtual bool IsSynchronized => _privColObj.IsSynchronized;
+
+            public virtual object SyncRoot => this;
+
+            public virtual void CopyTo(Array array, int index) {
+                _privColObj.CopyTo(array, index);
                 int nCtr;
-                for (nCtr = 0; (nCtr < array.Length); nCtr = (nCtr + 1)) {
-                    array.SetValue(new BcdObject(((System.Management.ManagementObject)(array.GetValue(nCtr)))), nCtr);
+                for (nCtr = 0; nCtr < array.Length; nCtr = nCtr + 1) {
+                    array.SetValue(new BcdObject((ManagementObject)array.GetValue(nCtr)), nCtr);
                 }
             }
             
-            public virtual System.Collections.IEnumerator GetEnumerator() {
-                return new BcdObjectEnumerator(privColObj.GetEnumerator());
+            public virtual IEnumerator GetEnumerator() {
+                return new BcdObjectEnumerator(_privColObj.GetEnumerator());
             }
             
-            public class BcdObjectEnumerator : object, System.Collections.IEnumerator {
+            public class BcdObjectEnumerator : object, IEnumerator {
                 
-                private ManagementObjectCollection.ManagementObjectEnumerator privObjEnum;
+                private readonly ManagementObjectCollection.ManagementObjectEnumerator _privObjEnum;
                 
                 public BcdObjectEnumerator(ManagementObjectCollection.ManagementObjectEnumerator objEnum) {
-                    privObjEnum = objEnum;
+                    _privObjEnum = objEnum;
                 }
                 
-                public virtual object Current {
-                    get {
-                        return new BcdObject(((System.Management.ManagementObject)(privObjEnum.Current)));
-                    }
-                }
-                
+                public virtual object Current => new BcdObject((ManagementObject)_privObjEnum.Current);
+
                 public virtual bool MoveNext() {
-                    return privObjEnum.MoveNext();
+                    return _privObjEnum.MoveNext();
                 }
                 
                 public virtual void Reset() {
-                    privObjEnum.Reset();
+                    _privObjEnum.Reset();
                 }
             }
         }
         
         // ValueType プロパティの NULL 値を扱う TypeConverter です。
-        public class WMIValueTypeConverter : TypeConverter {
+        public class WmiValueTypeConverter : TypeConverter {
             
-            private TypeConverter baseConverter;
+            private readonly TypeConverter _baseConverter;
             
-            private System.Type baseType;
+            private readonly Type _baseType;
             
-            public WMIValueTypeConverter(System.Type inBaseType) {
-                baseConverter = TypeDescriptor.GetConverter(inBaseType);
-                baseType = inBaseType;
+            public WmiValueTypeConverter(Type inBaseType) {
+                _baseConverter = TypeDescriptor.GetConverter(inBaseType);
+                _baseType = inBaseType;
             }
             
-            public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type srcType) {
-                return baseConverter.CanConvertFrom(context, srcType);
+            public override bool CanConvertFrom(ITypeDescriptorContext context, Type srcType) {
+                return _baseConverter.CanConvertFrom(context, srcType);
             }
             
-            public override bool CanConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Type destinationType) {
-                return baseConverter.CanConvertTo(context, destinationType);
+            public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType) {
+                return _baseConverter.CanConvertTo(context, destinationType);
             }
             
-            public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value) {
-                return baseConverter.ConvertFrom(context, culture, value);
+            public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value) {
+                return _baseConverter.ConvertFrom(context, culture, value);
             }
             
-            public override object CreateInstance(System.ComponentModel.ITypeDescriptorContext context, System.Collections.IDictionary dictionary) {
-                return baseConverter.CreateInstance(context, dictionary);
+            public override object CreateInstance(ITypeDescriptorContext context, IDictionary dictionary) {
+                return _baseConverter.CreateInstance(context, dictionary);
             }
             
-            public override bool GetCreateInstanceSupported(System.ComponentModel.ITypeDescriptorContext context) {
-                return baseConverter.GetCreateInstanceSupported(context);
+            public override bool GetCreateInstanceSupported(ITypeDescriptorContext context) {
+                return _baseConverter.GetCreateInstanceSupported(context);
             }
             
-            public override PropertyDescriptorCollection GetProperties(System.ComponentModel.ITypeDescriptorContext context, object value, System.Attribute[] attributeVar) {
-                return baseConverter.GetProperties(context, value, attributeVar);
+            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributeVar) {
+                return _baseConverter.GetProperties(context, value, attributeVar);
             }
             
-            public override bool GetPropertiesSupported(System.ComponentModel.ITypeDescriptorContext context) {
-                return baseConverter.GetPropertiesSupported(context);
+            public override bool GetPropertiesSupported(ITypeDescriptorContext context) {
+                return _baseConverter.GetPropertiesSupported(context);
             }
             
-            public override System.ComponentModel.TypeConverter.StandardValuesCollection GetStandardValues(System.ComponentModel.ITypeDescriptorContext context) {
-                return baseConverter.GetStandardValues(context);
+            public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
+                return _baseConverter.GetStandardValues(context);
             }
             
-            public override bool GetStandardValuesExclusive(System.ComponentModel.ITypeDescriptorContext context) {
-                return baseConverter.GetStandardValuesExclusive(context);
+            public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) {
+                return _baseConverter.GetStandardValuesExclusive(context);
             }
             
-            public override bool GetStandardValuesSupported(System.ComponentModel.ITypeDescriptorContext context) {
-                return baseConverter.GetStandardValuesSupported(context);
+            public override bool GetStandardValuesSupported(ITypeDescriptorContext context) {
+                return _baseConverter.GetStandardValuesSupported(context);
             }
             
-            public override object ConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType) {
-                if ((baseType.BaseType == typeof(System.Enum))) {
-                    if ((value.GetType() == destinationType)) {
+            public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType) {
+                if (_baseType.BaseType == typeof(Enum)) {
+                    if (value.GetType() == destinationType) {
                         return value;
                     }
-                    if ((((value == null) 
-                                && (context != null)) 
-                                && (context.PropertyDescriptor.ShouldSerializeValue(context.Instance) == false))) {
-                        return  "NULL_ENUM_VALUE" ;
-                    }
-                    return baseConverter.ConvertTo(context, culture, value, destinationType);
+                    return _baseConverter.ConvertTo(context, culture, value, destinationType);
                 }
-                if (((baseType == typeof(bool)) 
-                            && (baseType.BaseType == typeof(System.ValueType)))) {
-                    if ((((value == null) 
-                                && (context != null)) 
-                                && (context.PropertyDescriptor.ShouldSerializeValue(context.Instance) == false))) {
+                if ((_baseType == typeof(bool)) 
+                    && (_baseType.BaseType == typeof(ValueType))) {
+                    if ((value == null) 
+                        && (context != null) 
+                        // ReSharper disable once PossibleNullReferenceException
+                        && (context.PropertyDescriptor.ShouldSerializeValue(context.Instance) == false)) {
                         return "";
                     }
-                    return baseConverter.ConvertTo(context, culture, value, destinationType);
+                    return _baseConverter.ConvertTo(context, culture, value, destinationType);
                 }
-                if (((context != null) 
-                            && (context.PropertyDescriptor.ShouldSerializeValue(context.Instance) == false))) {
+                if ((context != null) 
+                    // ReSharper disable once PossibleNullReferenceException
+                    && (context.PropertyDescriptor.ShouldSerializeValue(context.Instance) == false)) {
                     return "";
                 }
-                return baseConverter.ConvertTo(context, culture, value, destinationType);
+                return _baseConverter.ConvertTo(context, culture, value, destinationType);
             }
         }
         
         // WMI システム プロパティを表す埋め込みクラスです。
-        [TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public class ManagementSystemProperties {
             
-            private System.Management.ManagementBaseObject PrivateLateBoundObject;
+            private readonly ManagementBaseObject _privateLateBoundObject;
             
-            public ManagementSystemProperties(System.Management.ManagementBaseObject ManagedObject) {
-                PrivateLateBoundObject = ManagedObject;
+            public ManagementSystemProperties(ManagementBaseObject managedObject) {
+                _privateLateBoundObject = managedObject;
             }
             
             [Browsable(true)]
-            public int GENUS {
-                get {
-                    return ((int)(PrivateLateBoundObject["__GENUS"]));
-                }
-            }
-            
+            public int Genus => (int)_privateLateBoundObject["__GENUS"];
+
             [Browsable(true)]
-            public string CLASS {
-                get {
-                    return ((string)(PrivateLateBoundObject["__CLASS"]));
-                }
-            }
-            
+            public string Class => (string)_privateLateBoundObject["__CLASS"];
+
             [Browsable(true)]
-            public string SUPERCLASS {
-                get {
-                    return ((string)(PrivateLateBoundObject["__SUPERCLASS"]));
-                }
-            }
-            
+            public string Superclass => (string)_privateLateBoundObject["__SUPERCLASS"];
+
             [Browsable(true)]
-            public string DYNASTY {
-                get {
-                    return ((string)(PrivateLateBoundObject["__DYNASTY"]));
-                }
-            }
-            
+            public string Dynasty => (string)_privateLateBoundObject["__DYNASTY"];
+
             [Browsable(true)]
-            public string RELPATH {
-                get {
-                    return ((string)(PrivateLateBoundObject["__RELPATH"]));
-                }
-            }
-            
+            public string Relpath => (string)_privateLateBoundObject["__RELPATH"];
+
             [Browsable(true)]
-            public int PROPERTY_COUNT {
-                get {
-                    return ((int)(PrivateLateBoundObject["__PROPERTY_COUNT"]));
-                }
-            }
-            
+            public int PropertyCount => (int)_privateLateBoundObject["__PROPERTY_COUNT"];
+
             [Browsable(true)]
-            public string[] DERIVATION {
-                get {
-                    return ((string[])(PrivateLateBoundObject["__DERIVATION"]));
-                }
-            }
-            
+            public string[] Derivation => (string[])_privateLateBoundObject["__DERIVATION"];
+
             [Browsable(true)]
-            public string SERVER {
-                get {
-                    return ((string)(PrivateLateBoundObject["__SERVER"]));
-                }
-            }
-            
+            public string Server => (string)_privateLateBoundObject["__SERVER"];
+
             [Browsable(true)]
-            public string NAMESPACE {
-                get {
-                    return ((string)(PrivateLateBoundObject["__NAMESPACE"]));
-                }
-            }
-            
+            public string Namespace => (string)_privateLateBoundObject["__NAMESPACE"];
+
             [Browsable(true)]
-            public string PATH {
-                get {
-                    return ((string)(PrivateLateBoundObject["__PATH"]));
-                }
-            }
+            // ReSharper disable once InconsistentNaming
+            public string PATH => (string)_privateLateBoundObject["__PATH"];
         }
     }
 }

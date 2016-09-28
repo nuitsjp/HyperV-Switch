@@ -1,11 +1,9 @@
-﻿using System.Windows.Controls;
-
-namespace Nuits.HyperV.Switch.View
+﻿namespace Nuits.HyperV.Switch.View
 {
     /// <summary>
     /// MessagePage.xaml の相互作用ロジック
     /// </summary>
-    public partial class MessagePage : Page
+    public partial class MessagePage
     {
         public MessagePage()
         {

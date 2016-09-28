@@ -1,12 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
-using MahApps.Metro.Controls;
 using Nuits.HyperV.Switch.Messaging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 
@@ -37,7 +31,7 @@ namespace Nuits.HyperV.Switch.View.Behavior
         {
             // 遷移先の画面インスタンスを生成する
             // message.Destinationと同名のPageクラスのインスタンスを生成する
-            Page nextPage = 
+            var nextPage = 
                 Activator.CreateInstance(
                     Type.GetType($"{typeof(MainWindow).Namespace}.{message.Destination.ToString()}", false)) as Page;
 
@@ -49,7 +43,7 @@ namespace Nuits.HyperV.Switch.View.Behavior
             if (message.ViewModel != null)
                 nextPage.DataContext = message.ViewModel;
 
-            base.AssociatedObject.Navigate(nextPage);
+            AssociatedObject.Navigate(nextPage);
         }
     }
 }

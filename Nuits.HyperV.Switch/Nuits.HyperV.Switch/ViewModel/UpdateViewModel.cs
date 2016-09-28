@@ -1,10 +1,5 @@
 ﻿using Nuits.HyperV.Switch.Messaging;
 using Nuits.HyperV.Switch.Model;
-using Reactive.Bindings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Nuits.HyperV.Switch.ViewModel
@@ -17,14 +12,14 @@ namespace Nuits.HyperV.Switch.ViewModel
         /// <summary>
         /// 変更先ののHyperVisorLaunchType
         /// </summary>
-        private readonly HyperVisorLaunchType launchType;
+        private readonly HyperVisorLaunchType _launchType;
         /// <summary>
         /// インスタンスを初期化する
         /// </summary>
         /// <param name="launchType"></param>
         public UpdateViewModel(HyperVisorLaunchType launchType) : base(Properties.Resources.UpdatingMessage)
         {
-            this.launchType = launchType;
+            _launchType = launchType;
         }
         /// <summary>
         /// Hyper-Vの設定を変更する
@@ -32,7 +27,7 @@ namespace Nuits.HyperV.Switch.ViewModel
         /// <returns></returns>
         protected override async Task<NavigationMessage> Process()
         {
-            await WmiService.Instance.SetHyperVisorLaunchType(launchType);
+            await WmiService.Instance.SetHyperVisorLaunchType(_launchType);
             return new NavigationMessage(NavigationDestination.CompletePage, new CompleteViewModel());
         }
     }

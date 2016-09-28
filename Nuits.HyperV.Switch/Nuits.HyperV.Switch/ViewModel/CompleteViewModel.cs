@@ -1,10 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using Nuits.HyperV.Switch.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Nuits.HyperV.Switch.ViewModel
@@ -28,8 +24,8 @@ namespace Nuits.HyperV.Switch.ViewModel
         /// </summary>
         public CompleteViewModel()
         {
-            CloseAndRestartCommand = new RelayCommand(() => CloseAndRestart());
-            CloseCommand = new RelayCommand(() => App.Current.Shutdown());
+            CloseAndRestartCommand = new RelayCommand(CloseAndRestart);
+            CloseCommand = new RelayCommand(() => Application.Current.Shutdown());
         }
 
         /// <summary>
@@ -38,7 +34,7 @@ namespace Nuits.HyperV.Switch.ViewModel
         private void CloseAndRestart()
         {
             WmiService.Instance.RebootSystem();
-            App.Current.Shutdown();
+            Application.Current.Shutdown();
         }
     }
 }
