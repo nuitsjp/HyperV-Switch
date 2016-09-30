@@ -1,5 +1,7 @@
 # HyperV-Switch
 
+[日本語ドキュメントはこちら](README-jp.md)
+
 ## Description
 It is an application to switch the ON / OFF of Hyper-V.  
 If you want to use the Hyper-V at the same time not be able to run applications, usually there was a need to do one of the following.  
@@ -16,6 +18,11 @@ However! , Restart of Windows is required.
 
 ![ScreenShot002](docs/images/screenshot002.png)
 
+## Precondition
+
+* Hyper-V is installed.  
+* .NET Framework 4.5.2 is installed  
+
 ## Download  
 
 Please get the latest version is downloaded from the following.  
@@ -26,10 +33,6 @@ Distribution format There are two types.
 
 * mis Installer  
 * Format without installation by ZIP file  
-
-## Precondition
-
-* Hyper-V must be installed.
 
 ## How to Use  
 
