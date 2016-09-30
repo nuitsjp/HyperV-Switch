@@ -27,12 +27,28 @@ Distribution format There are two types.
 * mis Installer  
 * Format without installation by ZIP file  
 
+## Precondition
+
+* Hyper-V must be installed.
+
 ## How to Use  
 
-Please start the application First.  
-It is to run the application you must be an administrator.  
+Please start the application.  
+It is to run the application you must be an Administrator.  
 
 Application after obtaining the status of the Hyper-V, will display the following screen.
 
 ![ScreenShot001](docs/images/screenshot001.png)
 
+State of the toggle button represents the state of the Hyper-V.  
+Change the toggle button, and then click the OK button.  
+
+If successful on the state of the update you will see the following screen.  
+
+![ScreenShot002](docs/images/screenshot002.png)
+
+When you click the "yes", will still be Windows restarts.  
+
+If "no" is clicked, it will not be restarted to exit the application.  
+The setting takes effect after you restart Windows.  
+When you are ready, please, and then restart it manually.  
