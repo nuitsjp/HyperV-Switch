@@ -3,6 +3,7 @@ using Nuits.HyperV.Switch.Model;
 using Reactive.Bindings;
 using System;
 using System.Reactive.Linq;
+using System.Windows;
 using Nuits.HyperV.Switch.Messaging;
 
 namespace Nuits.HyperV.Switch.ViewModel
@@ -28,6 +29,11 @@ namespace Nuits.HyperV.Switch.ViewModel
         /// </summary>
         public ReactiveCommand UpdateCommand { get; }
 
+        /// <summary>
+        /// Cancelコマンド
+        /// </summary>
+        public ReactiveCommand CancelCommand { get; }
+
         #endregion
 
         #region Constructor
@@ -48,6 +54,9 @@ namespace Nuits.HyperV.Switch.ViewModel
             {
                 MessengerInstance.Send(new NavigationMessage(NavigationDestination.ProcessPage, new UpdateViewModel(LaunchType.Value)));
             });
+
+            CancelCommand = new ReactiveCommand();
+            CancelCommand.Subscribe(_ => Application.Current.MainWindow?.Close());
         }
         #endregion
     }

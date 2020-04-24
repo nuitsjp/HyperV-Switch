@@ -19,7 +19,7 @@
         <controls:ToggleSwitch Header="Hyper-V state" Height="70" VerticalAlignment="Top" IsChecked="{Binding LaunchType.Value, Converter={StaticResource HyperVisorLaunchTypeConverter}}"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
             <Button Content="Ok" Width="75" Style="{StaticResource SquareButtonStyle}" Command="{Binding UpdateCommand}"/>
-            <Button Content="Cancel" Width="75" Style="{StaticResource SquareButtonStyle}" Margin="10,0,0,0"/>
+            <Button Content="Cancel" Width="75" Style="{StaticResource SquareButtonStyle}" Margin="10,0,0,0" Command="{Binding CancelCommand}"/>
         </StackPanel>
     </Grid>
 </Page>
